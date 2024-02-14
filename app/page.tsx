@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const phrases = [
@@ -22,6 +23,8 @@ const phrases = [
 ];
 
 export default function Home() {
+  const searchParams = useSearchParams()
+  const name = searchParams.get('name')
   const [noCount, setNoCount] = useState(0);
   const [yesPressed, setYesPressed] = useState(false);
   const yesButtonSize = noCount * 20 + 16;
@@ -35,7 +38,7 @@ export default function Home() {
   }
 
   return (
-    <div className="centered-container">
+    <main className="flex-1">
       <div className="valentine-container">
         {yesPressed ? (
           <>
@@ -48,7 +51,7 @@ export default function Home() {
               className="h-[200px]"
               src="https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.gif"
             />
-            <h1 className="text-container">Will you be my Valentine?</h1>
+            <h1 className="text-container">{name ? `${name}, will` : 'Will'} you be my Valentine?</h1>
             <div>
               <button
                 className="yes-button"
@@ -64,6 +67,6 @@ export default function Home() {
           </>
         )}
       </div>
-    </div>
+    </main>
   );
 }
