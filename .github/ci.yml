@@ -1,0 +1,32 @@
+name: CI/CD Pipeline for Next.js
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'master'
+      - 'develop'
+      - 'feature/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Next.js App
+        env:
+          SKIP_ENV_VALIDATION: 1
+        run: pnpm run build
