@@ -4,10 +4,6 @@ FROM --platform=linux/amd64 node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
-# Install Prisma Client - remove if not using Prisma
-
-COPY prisma ./
-
 # Install dependencies based on the preferred package manager
 
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml\* ./
@@ -28,7 +24,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN \
     if [ -f yarn.lock ]; then SKIP_ENV_VALIDATION=1 yarn build; \
@@ -44,7 +40,7 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED 1
 
 COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/public ./public
