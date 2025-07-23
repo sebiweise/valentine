@@ -12,11 +12,13 @@ export const metadata: Metadata = {
   },
 };
 
+interface Props {
+  children: React.ReactNode;
+}
+
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: Readonly<Props>) {
   return (
     <html lang="en">
       <body className={inter.className}>
