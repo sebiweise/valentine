@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
+import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
 const phrases = [
   "No",
@@ -27,6 +28,7 @@ const BASE_YES_FONT_SIZE = 16;
 const YES_FONT_SIZE_STEP = 20;
 // Keeps the Yes button from growing beyond the viewport after many "No" clicks
 const MAX_YES_FONT_SIZE = 240;
+const CONFETTI_DURATION_MS = 5000;
 
 function Valentine() {
   const searchParams = useSearchParams();
@@ -43,6 +45,11 @@ function Valentine() {
     <div className="valentine-container">
       {yesPressed ? (
         <>
+          <Fireworks
+            className="confetti-canvas"
+            autorun={{ speed: 3, duration: CONFETTI_DURATION_MS }}
+            globalOptions={{ disableForReducedMotion: true }}
+          />
           {/* eslint-disable-next-line @next/next/no-img-element -- animated remote GIF, no optimization needed */}
           <img
             src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif"

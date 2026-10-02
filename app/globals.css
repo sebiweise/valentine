@@ -60,3 +60,11 @@
   margin-top: 1rem; /* Equivalent to my-4 in tailwindcss */
   margin-bottom: 1rem; /* Equivalent to my-4 in tailwindcss */
 }
+
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
