@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+    // Required by the Dockerfile, which copies .next/standalone into the runtime image
+    output: 'standalone',
+    poweredByHeader: false,
     async headers() {
         return [
             {
@@ -17,6 +20,10 @@ const nextConfig: NextConfig = {
                     {
                         key: 'Referrer-Policy',
                         value: 'strict-origin-when-cross-origin',
+                    },
+                    {
+                        key: 'Permissions-Policy',
+                        value: 'camera=(), microphone=(), geolocation=()',
                     },
                 ],
             },

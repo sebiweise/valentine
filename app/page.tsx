@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 const phrases = [
   "No",
@@ -22,51 +22,78 @@ const phrases = [
   "You're breaking my heart ;(",
 ];
 
-export default function Home() {
-  const searchParams = useSearchParams()
-  const name = searchParams.get('name')
+const MAX_NAME_LENGTH = 50;
+const BASE_YES_FONT_SIZE = 16;
+const YES_FONT_SIZE_STEP = 20;
+// Keeps the Yes button from growing beyond the viewport after many "No" clicks
+const MAX_YES_FONT_SIZE = 240;
+
+function Valentine() {
+  const searchParams = useSearchParams();
+  const name = searchParams.get("name")?.trim().slice(0, MAX_NAME_LENGTH);
   const [noCount, setNoCount] = useState(0);
   const [yesPressed, setYesPressed] = useState(false);
-  const yesButtonSize = noCount * 20 + 16;
-
-  function handleNoClick() {
-    setNoCount(noCount + 1);
-  }
-
-  function getNoButtonText() {
-    return phrases[Math.min(noCount, phrases.length - 1)];
-  }
+  const yesButtonSize = Math.min(
+    noCount * YES_FONT_SIZE_STEP + BASE_YES_FONT_SIZE,
+    MAX_YES_FONT_SIZE,
+  );
+  const noButtonText = phrases[Math.min(noCount, phrases.length - 1)];
 
   return (
-    <main className="flex-1">
-      <div className="valentine-container">
-        {yesPressed ? (
-          <>
-            <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" />
-            <div className="text-container">Ok yay!!!</div>
-          </>
-        ) : (
-          <>
-            <img
-              className="h-[200px]"
-              src="https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.gif"
-            />
-            <h1 className="text-container">{name ? `${name}, will` : 'Will'} you be my Valentine?</h1>
-            <div>
-              <button
-                className="yes-button"
-                style={{ fontSize: yesButtonSize }}
-                onClick={() => setYesPressed(true)}
-              >
-                Yes
-              </button>
-              <button className="no-button" onClick={() => handleNoClick()}>
-                {getNoButtonText()}
-              </button>
-            </div>
-          </>
-        )}
-      </div>
+    <div className="valentine-container">
+      {yesPressed ? (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element -- animated remote GIF, no optimization needed */}
+          <img
+            src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif"
+            alt="Two bears kissing"
+            className="h-[200px]"
+          />
+          <div className="text-container" role="status">
+            Ok yay!!!
+          </div>
+        </>
+      ) : (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element -- animated remote GIF, no optimization needed */}
+          <img
+            src="https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.gif"
+            alt="Cute bear holding roses"
+            className="h-[200px]"
+          />
+          <h1 className="text-container">
+            {name ? `${name}, will` : "Will"} you be my Valentine?
+          </h1>
+          <div className="button-row">
+            <button
+              type="button"
+              className="yes-button"
+              style={{ fontSize: yesButtonSize }}
+              onClick={() => setYesPressed(true)}
+            >
+              Yes
+            </button>
+            <button
+              type="button"
+              className="no-button"
+              onClick={() => setNoCount((count) => count + 1)}
+            >
+              {noButtonText}
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <main>
+      {/* useSearchParams() requires a Suspense boundary for static rendering */}
+      <Suspense>
+        <Valentine />
+      </Suspense>
     </main>
   );
 }

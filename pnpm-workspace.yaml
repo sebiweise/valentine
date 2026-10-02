@@ -1,0 +1,3 @@
+allowBuilds:
+  # Only runs a postinstall check; prebuilt binaries are installed as optional deps
+  unrs-resolver: false
