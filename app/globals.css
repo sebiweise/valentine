@@ -22,7 +22,7 @@
 /* Custom class for Yes button styles */
 .yes-button {
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-  background-color: #16a34a; /* bg-green-600 */
+  background-color: #15803d; /* bg-green-700 */
   color: #fff; /* text-white */
   font-weight: bold; /* font-bold */
   padding: 8px 16px; /* py-2 px-4 */
@@ -31,7 +31,7 @@
 }
 
 .yes-button:hover {
-  background-color: #15803d; /* hover:bg-green-700 */
+  background-color: #166534; /* hover:bg-green-800 */
 }
 
 /* Custom class for No button styles */

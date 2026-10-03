@@ -56,9 +56,7 @@ function Valentine() {
             alt="Two bears kissing"
             className="h-[200px]"
           />
-          <div className="text-container" role="status">
-            Ok yay!!!
-          </div>
+          <output className="text-container block">Ok yay!!!</output>
         </>
       ) : (
         <>
