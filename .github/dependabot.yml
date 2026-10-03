@@ -5,6 +5,20 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "master"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # The plugins bundled with eslint-config-next do not support ESLint 10 yet
+      - dependency-name: "eslint"
+        versions: [">=10"]
+      # typescript-eslint (via eslint-config-next) requires TypeScript < 6.1
+      - dependency-name: "typescript"
+        versions: [">=6.1"]
 
   - package-ecosystem: "docker"
     directory: "/"

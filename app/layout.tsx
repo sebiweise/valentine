@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import type { ReactNode } from "react";
 import "./globals.css";
-import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "♥♥♥",
+  description: "Will you be my Valentine?",
   icons: {
     icon: "/favicon.png",
   },
 };
 
 interface Props {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function RootLayout({
@@ -22,9 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Suspense>
-          {children}
-        </Suspense>
+        {children}
       </body>
     </html>
   );
