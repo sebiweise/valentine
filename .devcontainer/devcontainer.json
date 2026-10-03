@@ -9,7 +9,7 @@
 	"forwardPorts": [3000],
 
 	// Installs the pnpm version pinned in package.json ("packageManager")
-	"postCreateCommand": "npm install -g pnpm@12.8.1 && pnpm install"
+	"postCreateCommand": "npm install -g --ignore-scripts pnpm@12.8.1 && pnpm install"
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},

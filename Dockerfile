@@ -4,7 +4,7 @@ FROM node:26-alpine AS deps
 WORKDIR /app
 
 # Keep in sync with the "packageManager" field in package.json
-RUN npm install -g pnpm@12.8.1
+RUN npm install -g --ignore-scripts pnpm@12.8.1
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
@@ -13,7 +13,7 @@ RUN pnpm install --frozen-lockfile
 
 FROM node:26-alpine AS builder
 WORKDIR /app
-RUN npm install -g pnpm@12.8.1
+RUN npm install -g --ignore-scripts pnpm@12.8.1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 

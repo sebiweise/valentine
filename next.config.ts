@@ -27,14 +27,13 @@ const nextConfig: NextConfig = {
     poweredByHeader: false,
     // Custom headers are not supported by static exports; they have to be set by the hosting server
     ...(env.NEXT_OUTPUT !== 'export' && {
-        async headers() {
-            return [
+        headers: () =>
+            Promise.resolve([
                 {
                     source: '/(.*)',
                     headers: securityHeaders,
                 },
-            ]
-        },
+            ]),
     }),
 };
 
