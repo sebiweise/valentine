@@ -39,3 +39,6 @@ yarn-error.log*
 # Next.js generated
 next-env.d.ts
 *.tsbuildinfo
+
+# graphify code graph, built locally by the Claude Code SessionStart hook
+graphify-out/
