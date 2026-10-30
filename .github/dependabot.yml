@@ -20,8 +20,11 @@ updates:
       - dependency-name: "typescript"
         versions: [">=6.1"]
 
+  # Updates tags and pinned digests of the base images
   - package-ecosystem: "docker"
-    directory: "/"
+    directories:
+      - "/"
+      - "/.devcontainer"
     schedule:
       interval: "weekly"
     target-branch: "master"
