@@ -1,0 +1,83 @@
+.illustration {
+  height: 200px;
+  width: auto;
+  max-width: 100%;
+}
+
+.sway {
+  transform-box: view-box;
+  transform-origin: 50% 95%;
+  animation: sway 3s ease-in-out infinite;
+}
+
+.heartbeat {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: heartbeat 1.2s ease-in-out infinite;
+}
+
+.float {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: float 2.4s ease-in infinite;
+  opacity: 0;
+}
+
+.delay1 {
+  animation-delay: 0.8s;
+}
+
+.delay2 {
+  animation-delay: 1.6s;
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes heartbeat {
+  0%,
+  30%,
+  100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.15);
+  }
+  45% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    /* In the heart's own (scaled) coordinate system, about 30-40px on screen */
+    transform: translateY(-3.5px) scale(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sway,
+  .heartbeat,
+  .float {
+    animation: none;
+  }
+
+  .float {
+    opacity: 1;
+  }
+}

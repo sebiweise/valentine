@@ -19,6 +19,13 @@ const securityHeaders = [
         key: 'Permissions-Policy',
         value: 'camera=(), microphone=(), geolocation=()',
     },
+    {
+        // Browsers ignore this header on plain HTTP, so local development is not affected.
+        // Without includeSubDomains/preload, so other subdomains of the domain are not affected.
+        key: 'Strict-Transport-Security',
+        value: 'max-age=63072000',
+    },
+    // The Content-Security-Policy is set per request with a nonce in proxy.ts
 ];
 
 const nextConfig: NextConfig = {
