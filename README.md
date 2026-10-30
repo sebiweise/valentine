@@ -13,7 +13,7 @@ https://your-domain.example/?name=Alex
 
 ## Development
 
-Requires Node.js >= 20.9 and [pnpm](https://pnpm.io/) (the version is pinned in `package.json` → `packageManager`).
+Requires Node.js >= 26 (see `.nvmrc`, also used by Docker, the devcontainer and CI) and [pnpm](https://pnpm.io/) (the version is pinned in `package.json` → `packageManager`).
 
 ```bash
 pnpm install
