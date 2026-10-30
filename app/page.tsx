@@ -26,13 +26,20 @@ const phrases = [
 const MAX_NAME_LENGTH = 50;
 const BASE_YES_FONT_SIZE = 16;
 const YES_FONT_SIZE_STEP = 20;
-// Keeps the Yes button from growing beyond the viewport after many "No" clicks
+// Upper bound for the Yes button font size after many "No" clicks; the
+// rendered size is additionally capped relative to the viewport width
+// (YES_FONT_SIZE_VIEWPORT_CAP) so the button stays visible on small screens
 const MAX_YES_FONT_SIZE = 240;
+const YES_FONT_SIZE_VIEWPORT_CAP = "22vw";
 const CONFETTI_DURATION_MS = 5000;
 
-function Valentine() {
-  const searchParams = useSearchParams();
-  const name = searchParams.get("name")?.trim().slice(0, MAX_NAME_LENGTH);
+// Truncates by code points (not UTF-16 code units) so emoji are never split
+function normalizeName(raw: string | null): string | undefined {
+  if (raw == null) return undefined;
+  return Array.from(raw.trim()).slice(0, MAX_NAME_LENGTH).join("").trim();
+}
+
+function Valentine({ name }: { name?: string }) {
   const [noCount, setNoCount] = useState(0);
   const [yesPressed, setYesPressed] = useState(false);
   const yesButtonSize = Math.min(
@@ -73,7 +80,9 @@ function Valentine() {
             <button
               type="button"
               className="yes-button"
-              style={{ fontSize: yesButtonSize }}
+              style={{
+                fontSize: `min(${yesButtonSize}px, ${YES_FONT_SIZE_VIEWPORT_CAP})`,
+              }}
               onClick={() => setYesPressed(true)}
             >
               Yes
@@ -92,12 +101,18 @@ function Valentine() {
   );
 }
 
+function NamedValentine() {
+  const searchParams = useSearchParams();
+  return <Valentine name={normalizeName(searchParams.get("name"))} />;
+}
+
 export default function Home() {
   return (
     <main>
-      {/* useSearchParams() requires a Suspense boundary for static rendering */}
-      <Suspense>
-        <Valentine />
+      {/* useSearchParams() requires a Suspense boundary for static rendering;
+          the generic question is prerendered as fallback until hydration */}
+      <Suspense fallback={<Valentine />}>
+        <NamedValentine />
       </Suspense>
     </main>
   );

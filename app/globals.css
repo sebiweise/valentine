@@ -19,33 +19,31 @@
   gap: 8px;
 }
 
-/* Custom class for Yes button styles */
+/* Shared button base */
+.yes-button,
+.no-button {
+  color: #fff;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .yes-button {
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-  background-color: #15803d; /* bg-green-700 */
-  color: #fff; /* text-white */
-  font-weight: bold; /* font-bold */
-  padding: 8px 16px; /* py-2 px-4 */
-  border-radius: 8px; /* rounded */
-  cursor: pointer;
+  background-color: #15803d;
 }
 
 .yes-button:hover {
-  background-color: #166534; /* hover:bg-green-800 */
+  background-color: #166534;
 }
 
-/* Custom class for No button styles */
 .no-button {
-  background-color: #dc2626; /* bg-red-600 */
-  color: #fff; /* text-white */
-  font-weight: bold; /* font-bold */
-  padding: 8px 16px; /* py-2 px-4 */
-  border-radius: 8px; /* rounded */
-  cursor: pointer;
+  background-color: #dc2626;
 }
 
 .no-button:hover {
-  background-color: #b91c1c; /* hover:bg-red-700 */
+  background-color: #b91c1c;
 }
 
 .yes-button:focus-visible,
@@ -54,11 +52,10 @@
   outline-offset: 2px;
 }
 
-/* Custom class for text-4xl my-4 container */
 .text-container {
-  font-size: 2.25rem; /* Equivalent to text-4xl in tailwindcss */
-  margin-top: 1rem; /* Equivalent to my-4 in tailwindcss */
-  margin-bottom: 1rem; /* Equivalent to my-4 in tailwindcss */
+  font-size: 2.25rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .confetti-canvas {
