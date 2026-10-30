@@ -4,6 +4,8 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
+import { BearsKissing, BearWithHeart } from "./illustrations";
+
 const phrases = [
   "No",
   "Are you sure?",
@@ -57,22 +59,12 @@ function Valentine({ name }: { name?: string }) {
             autorun={{ speed: 3, duration: CONFETTI_DURATION_MS }}
             globalOptions={{ disableForReducedMotion: true }}
           />
-          {/* eslint-disable-next-line @next/next/no-img-element -- animated remote GIF, no optimization needed */}
-          <img
-            src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif"
-            alt="Two bears kissing"
-            className="h-[200px]"
-          />
+          <BearsKissing />
           <output className="text-container block">Ok yay!!!</output>
         </>
       ) : (
         <>
-          {/* eslint-disable-next-line @next/next/no-img-element -- animated remote GIF, no optimization needed */}
-          <img
-            src="https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.gif"
-            alt="Cute bear holding roses"
-            className="h-[200px]"
-          />
+          <BearWithHeart />
           <h1 className="text-container">
             {name ? `${name}, will` : "Will"} you be my Valentine?
           </h1>
