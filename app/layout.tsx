@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { connection } from "next/server";
 import type { ReactNode } from "react";
+
+import { env } from "@/env";
+
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -17,9 +21,16 @@ interface Props {
   children: ReactNode;
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<Props>) {
+  // The nonce-based CSP from proxy.ts only works for pages rendered per
+  // request. The static export instead gets a hash-based CSP from
+  // scripts/postbuild.mjs.
+  if (env.NEXT_OUTPUT !== "export") {
+    await connection();
+  }
+
   return (
     <html lang="en">
       <body className={inter.className}>
