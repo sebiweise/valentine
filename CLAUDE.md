@@ -22,6 +22,10 @@ The app loads resources only from its own origin (inline SVG illustrations, font
 - Server (unset or `standalone`): `proxy.ts` sets a strict CSP with a fresh nonce per request, so pages render per request instead of being prerendered. `next.config.ts` adds the other security headers, including HSTS.
 - Static export (`export`): `proxy.ts` does not run, so `scripts/postbuild.mjs` adds a CSP `<meta>` tag with SHA-256 hashes of the inline scripts to every exported page. `frame-ancestors` and the other headers must then be set by the web server (list in `README.md`).
 
+## Commits
+
+No `Co-Authored-By` lines in commit messages.
+
 ## graphify (code graph)
 
 [graphify](https://github.com/Graphify-Labs/graphify) (PyPI `graphifyy`) keeps a knowledge graph of this codebase in `graphify-out/` (gitignored: a build product, rewritten whole on every build, so it is never committed). `.claude/hooks/graphify-session-start.sh` builds it at the start of every session: AST-only (`--code-only`, local tree-sitter, no API key, seconds), so it always matches the checkout. Cloud sessions install the pinned `graphifyy` themselves (wheels only); locally the hook only runs if graphify is already on your `PATH` (`uv tool install graphifyy`) and never installs anything.
