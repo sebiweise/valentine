@@ -4,6 +4,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Version updates wait a week: most hijacked releases are pulled within
+    # days. Security updates are not delayed by this.
+    cooldown:
+      default-days: 7
     target-branch: "master"
     groups:
       dependencies:
@@ -27,16 +31,26 @@ updates:
       - "/.devcontainer"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     target-branch: "master"
 
   - package-ecosystem: "devcontainers"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     target-branch: "master"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     target-branch: "master"
+    groups:
+      actions:
+        patterns:
+        - "*"
