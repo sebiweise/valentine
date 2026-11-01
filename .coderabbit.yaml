@@ -30,7 +30,7 @@ reviews:
     - "!out/**"
 
   path_instructions:
-    - path: "app/**/*.{ts,tsx}"
+    - path: "app/**/*.{ts,tsx,css}"
       instructions: >-
         Next.js 16 (App Router), React 19, TypeScript, Tailwind 4. Die Seite
         lädt nur Ressourcen vom eigenen Origin: melde jedes CDN, externe Bild-,
