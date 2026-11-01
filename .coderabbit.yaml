@@ -1,0 +1,109 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# CodeRabbit configuration for Valentine.
+language: de-DE
+tone_instructions: >-
+  Sachlich und knapp auf Deutsch. Eine kleine, öffentliche Spaß-Seite: Fehler,
+  die sie für Besucher kaputt machen (auch auf dem Handy) oder die strenge CSP
+  aufweichen, immer zuerst nennen.
+early_access: false
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  review_status: true
+  poem: false
+  collapse_walkthrough: true
+  sequence_diagrams: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - master
+    ignore_usernames:
+      - dependabot[bot]
+
+  path_filters:
+    - "!pnpm-lock.yaml"
+    - "!graphify-out/**"
+    - "!out/**"
+
+  path_instructions:
+    - path: "app/**/*.{ts,tsx}"
+      instructions: >-
+        Next.js 16 (App Router), React 19, TypeScript, Tailwind 4. Die Seite
+        lädt nur Ressourcen vom eigenen Origin: melde jedes CDN, externe Bild-,
+        Font- oder Skriptquelle. Der Query-Parameter `name` ist Nutzereingabe:
+        nur als Text rendern (kein dangerouslySetInnerHTML), Länge nach
+        Code Points begrenzen, Emoji nicht zerteilen. Der Ja-Button darf auch
+        nach vielen Klicks auf „Nein“ auf kleinen Bildschirmen sichtbar und
+        bedienbar bleiben. Barrierefreiheit: Fokus sichtbar, Buttons per
+        Tastatur bedienbar, Illustrationen mit sinnvollem Alternativtext oder
+        aria-hidden. UI-Texte auf Englisch. Lint übernimmt ESLint,
+        Sicherheitsfunde meldet der Security-Scan: diese nicht wiederholen.
+    - path: "{proxy.ts,lib/csp.mjs,scripts/postbuild.mjs,next.config.ts}"
+      instructions: >-
+        Server: proxy.ts setzt eine CSP mit Nonce pro Anfrage, deshalb wird
+        pro Anfrage gerendert. Statischer Export (NEXT_OUTPUT=export):
+        postbuild.mjs fügt eine CSP als meta-Tag mit Hashes der
+        Inline-Skripte ein. 'unsafe-inline' nur für style-src,
+        'unsafe-eval' nur in der Entwicklung. Jede weitere Lockerung braucht
+        eine sehr gute Begründung. Alle drei Ausgabemodi (Vercel,
+        standalone, export) müssen weiter funktionieren.
+    - path: "env.ts"
+      instructions: >-
+        Umgebungsvariablen über @t3-oss/env-nextjs. Neue Variablen in
+        runtimeEnv eintragen, in .env.example und der README dokumentieren.
+    - path: "{Dockerfile,.devcontainer/**}"
+      instructions: >-
+        Basis-Images per Tag und Digest gepinnt (Dependabot aktualisiert
+        beides). Laufzeit als Nicht-Root auf distroless; Node-Version passt
+        zu .nvmrc, pnpm-Version zu packageManager in package.json.
+    - path: ".github/workflows/**"
+      instructions: >-
+        Fremde Actions per Commit-SHA mit Versionskommentar pinnen
+        (`owner/action@<sha> # vX.Y.Z`), minimale permissions setzen. CI
+        prüft pnpm check, den Build und docker build.
+    - path: ".claude/hooks/**"
+      instructions: >-
+        Bash-Hooks für graphify. Sie dürfen nie blockieren. Lokal installieren
+        sie nichts, wenn graphify fehlt; nur in Cloud-Sitzungen installiert
+        graphify-session-start.sh das gepinnte Paket (nur Wheels). In Bash
+        `[[ ]]` statt `[ ]`.
+    - path: "{README.md,CLAUDE.md}"
+      instructions: >-
+        README auf Englisch für Besucher und Entwickler, CLAUDE.md beschreibt
+        Struktur und Regeln für Agents. Beides muss zum Code passen, wenn sich
+        Verhalten oder Struktur ändern.
+
+  tools:
+    eslint:
+      enabled: true
+    biome:
+      enabled: false
+    oxc:
+      enabled: false
+    yamllint:
+      enabled: true
+    actionlint:
+      enabled: true
+    shellcheck:
+      enabled: true
+    hadolint:
+      enabled: true
+    markdownlint:
+      enabled: false
+    gitleaks:
+      enabled: true
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "CLAUDE.md"
+  learnings:
+    scope: local
