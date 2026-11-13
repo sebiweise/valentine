@@ -1,5 +1,7 @@
 # Valentine
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sebiweise_valentine&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sebiweise_valentine)
+
 A small [Next.js](https://nextjs.org/) app that asks the big question: *"Will you be my Valentine?"*
 Every click on "No" makes the "Yes" button a little bigger.
 
