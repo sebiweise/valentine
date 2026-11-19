@@ -62,8 +62,8 @@ reviews:
         zu .nvmrc, pnpm-Version zu packageManager in package.json.
     - path: ".github/workflows/**"
       instructions: >-
-        Fremde Actions per Commit-SHA mit Versionskommentar pinnen
-        (`owner/action@<sha> # vX.Y.Z`), minimale permissions setzen. CI
+        Actions per Versions-Tag einbinden (`owner/action@vX`, Major-Tag,
+        wo die Action einen hat), minimale permissions setzen. CI
         prüft pnpm check, den Build und docker build.
     - path: ".claude/hooks/**"
       instructions: >-
