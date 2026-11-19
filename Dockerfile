@@ -7,7 +7,7 @@ ARG PNPM_VERSION=12.8.1
 # platform-specific native modules traced into the standalone output load there.
 # Base images are pinned by digest (multi-platform index), Dependabot updates
 # tag and digest together.
-FROM node:26-trixie-slim@sha256:e4db4c914bf8ad241bd24804fc25d272d89bad97e68cdc8a1414862790a02c39 AS deps
+FROM node:26-trixie-slim@sha256:e6bedef217677b276c591795e169840edd9096dbf13f29df8ef8d1856b8820bc AS deps
 ARG PNPM_VERSION
 WORKDIR /app
 
@@ -18,7 +18,7 @@ RUN pnpm install --frozen-lockfile
 
 ##### BUILDER
 
-FROM node:26-trixie-slim@sha256:e4db4c914bf8ad241bd24804fc25d272d89bad97e68cdc8a1414862790a02c39 AS builder
+FROM node:26-trixie-slim@sha256:e6bedef217677b276c591795e169840edd9096dbf13f29df8ef8d1856b8820bc AS builder
 ARG PNPM_VERSION
 WORKDIR /app
 RUN npm install -g --ignore-scripts pnpm@${PNPM_VERSION}
