@@ -1,56 +1,120 @@
+# Dependabot, set up the same way in every repository of sebiweise: weekly on
+# Monday morning, a week of cooldown, few grouped pull requests. Only the
+# directories, the target branch and the ignore list differ per repository.
+# Dependabot reads this file from the default branch only.
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  # npm also covers pnpm (pnpm-lock.yaml).
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "weekly"
-    # Version updates wait a week: most hijacked releases are pulled within
-    # days. Security updates are not delayed by this.
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Berlin
+    # Version updates wait a week: longer than pnpm's minimumReleaseAge, and
+    # most hijacked releases are pulled by then. Security updates are not delayed.
     cooldown:
       default-days: 7
-    target-branch: "master"
+    open-pull-requests-limit: 5
+    labels: [dependencies]
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(dev-deps)"
+    # The first matching group wins.
     groups:
-      dependencies:
+      # Minor and patch updates of everything in one pull request.
+      npm-minor-patch:
+        applies-to: version-updates
+        update-types: [minor, patch]
+      # Majors of packages that only work together, one pull request per
+      # family. Groups whose packages a repository does not use stay empty.
+      next-react:
+        update-types: [major]
+        patterns: [next, eslint-config-next, react, react-dom, "@types/react*"]
+      prisma:
+        update-types: [major]
+        patterns: [prisma, "@prisma/*"]
+      better-auth:
+        update-types: [major]
+        patterns: [better-auth, "@better-auth/*"]
+      trpc-tanstack:
+        update-types: [major]
+        patterns: ["@trpc/*", "@tanstack/*"]
+      react-email:
+        update-types: [major]
+        patterns: [react-email, "@react-email/*"]
+      tailwind:
+        update-types: [major]
+        patterns: [tailwindcss, "@tailwindcss/*"]
+      lint-format:
+        update-types: [major]
         patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
+          [
+            eslint,
+            "eslint-*",
+            "@eslint/*",
+            typescript-eslint,
+            prettier,
+            "prettier-*",
+            "@biomejs/*",
+          ]
+      # Security updates in one pull request.
+      npm-security:
+        applies-to: security-updates
+        patterns: ["*"]
     ignore:
-      # The plugins bundled with eslint-config-next do not support ESLint 10 yet
-      - dependency-name: "eslint"
+      # The plugins bundled with eslint-config-next do not support ESLint 10 yet.
+      - dependency-name: eslint
         versions: [">=10"]
-      # typescript-eslint (via eslint-config-next) requires TypeScript < 6.1
-      - dependency-name: "typescript"
+      # typescript-eslint (via eslint-config-next) requires TypeScript < 6.1.
+      - dependency-name: typescript
         versions: [">=6.1"]
 
-  # Updates tags and pinned digests of the base images
-  - package-ecosystem: "docker"
+  # Base image tags and digests.
+  - package-ecosystem: docker
     directories:
       - "/"
       - "/.devcontainer"
     schedule:
-      interval: "weekly"
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Berlin
     cooldown:
       default-days: 7
-    target-branch: "master"
-
-  - package-ecosystem: "devcontainers"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    cooldown:
-      default-days: 7
-    target-branch: "master"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    cooldown:
-      default-days: 7
-    target-branch: "master"
+    labels: [dependencies]
+    commit-message:
+      prefix: "chore(docker)"
     groups:
-      actions:
-        patterns:
-        - "*"
+      docker:
+        patterns: ["*"]
+
+  - package-ecosystem: devcontainers
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Berlin
+    cooldown:
+      default-days: 7
+    labels: [dependencies]
+    commit-message:
+      prefix: "chore(devcontainer)"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Berlin
+    cooldown:
+      default-days: 7
+    labels: [dependencies]
+    commit-message:
+      prefix: "ci"
+    groups:
+      github-actions:
+        patterns: ["*"]
