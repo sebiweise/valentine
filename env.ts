@@ -16,6 +16,11 @@ export const env = createEnv({
      * - "export": fully static HTML export into `out/`
      */
     NEXT_OUTPUT: z.enum(["standalone", "export"]).optional(),
+    /**
+     * Set to "1" by Vercel (system environment variable, at build time and at
+     * runtime). Vercel Web Analytics and Speed Insights are only loaded there.
+     */
+    VERCEL: z.string().optional(),
   },
 
   /**
@@ -30,6 +35,7 @@ export const env = createEnv({
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
     NEXT_OUTPUT: process.env.NEXT_OUTPUT,
+    VERCEL: process.env.VERCEL,
   },
 
   /**

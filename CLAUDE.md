@@ -17,10 +17,14 @@ A small Next.js app that asks "Will you be my Valentine?"; every click on "No" m
 
 ## Content Security Policy
 
-The app loads resources only from its own origin (inline SVG illustrations, font self-hosted by `next/font`). Keep it that way: no CDNs, hotlinked images or external scripts. The policy lives in `lib/csp.mjs`.
+The app loads resources only from its own origin (inline SVG illustrations, font self-hosted by `next/font`, Vercel Analytics and Speed Insights from `/_vercel`). Keep it that way: no CDNs, hotlinked images or external scripts. The policy lives in `lib/csp.mjs`.
 
 - Server (unset or `standalone`): `proxy.ts` sets a strict CSP with a fresh nonce per request, so pages render per request instead of being prerendered. `next.config.ts` adds the other security headers, including HSTS.
 - Static export (`export`): `proxy.ts` does not run, so `scripts/postbuild.mjs` adds a CSP `<meta>` tag with SHA-256 hashes of the inline scripts to every exported page. `frame-ancestors` and the other headers must then be set by the web server (list in `README.md`).
+
+## Analytics
+
+Vercel Web Analytics and Speed Insights (`app/insights.tsx`, helpers in `lib/insights.ts`) are mounted once in `app/layout.tsx` and only load in a production build on Vercel. `beforeSend` reports only `/` and always drops the query string (`?name=` is personal data). `proxy.ts` must never touch `/_vercel/*` or the path in `NEXT_PUBLIC_VERCEL_OBSERVABILITY_BASEPATH`. No consent banner by decision; details and how to switch to opt-in in `README.md` ("Analytics"). Changing what is collected requires updating that section.
 
 ## graphify (code graph)
 

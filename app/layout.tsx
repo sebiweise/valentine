@@ -4,6 +4,9 @@ import { connection } from "next/server";
 import type { ReactNode } from "react";
 
 import { env } from "@/env";
+import { insightsEnabled } from "@/lib/insights";
+
+import { Insights } from "./insights";
 
 import "./globals.css";
 
@@ -35,6 +38,8 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         {children}
+        {/* Vercel Web Analytics and Speed Insights, only on Vercel (lib/insights.ts) */}
+        {insightsEnabled(env.VERCEL, env.NODE_ENV) && <Insights />}
       </body>
     </html>
   );
