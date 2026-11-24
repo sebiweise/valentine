@@ -33,7 +33,7 @@ export function publicEvent<T extends { url: string }>(
   } catch {
     return null;
   }
-  const path = url.pathname.length > 1 ? url.pathname.replace(/\/+$/, "") : url.pathname;
+  const path = url.pathname.length > 1 ? trimTrailingSlashes(url.pathname) : url.pathname;
   if (!publicPaths.includes(path)) return null;
   return { ...event, url: `${url.origin}${path}` };
 }
@@ -49,7 +49,24 @@ export function isObservabilityPath(pathname: string, basePath: string | undefin
   if (pathname === "/_vercel" || pathname.startsWith("/_vercel/")) return true;
   if (!basePath) return false;
   // The packages prefix a missing leading slash themselves
-  const prefix = `/${basePath.replace(/^\/+|\/+$/g, "")}`;
+  const prefix = `/${trimSlashes(basePath)}`;
   if (prefix === "/") return false;
   return pathname === prefix || pathname.startsWith(`${prefix}/`);
+}
+
+/**
+ * The value without trailing slashes. A loop instead of `/\/+$/`, which
+ * backtracks super-linearly on long runs of slashes.
+ */
+function trimTrailingSlashes(value: string): string {
+  let end = value.length;
+  while (end > 0 && value[end - 1] === "/") end--;
+  return value.slice(0, end);
+}
+
+/** The value without leading and trailing slashes (see trimTrailingSlashes). */
+function trimSlashes(value: string): string {
+  let start = 0;
+  while (start < value.length && value[start] === "/") start++;
+  return trimTrailingSlashes(value.slice(start));
 }
