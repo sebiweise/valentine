@@ -5,6 +5,8 @@ node_modules
 npm-debug.log
 README.md
 .next
+out
+.wrangler
 .git
 .github
 .devcontainer

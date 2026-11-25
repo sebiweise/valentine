@@ -13,14 +13,19 @@ A small Next.js app that asks "Will you be my Valentine?"; every click on "No" m
 - `pnpm dev`: dev server on http://localhost:3000.
 - `pnpm check`: eslint + `next typegen` + `tsc --noEmit`. CI runs `pnpm check`, `pnpm build` and `docker build .`.
 - `pnpm build`: production build, followed by `scripts/postbuild.mjs`. Always build with `pnpm build`, never `next build` directly.
-- Output mode via `NEXT_OUTPUT`: unset for Vercel, `standalone` (set by the Dockerfile), `export` for a static site in `out/` (`NEXT_OUTPUT=export pnpm build`).
+- Output mode via `NEXT_OUTPUT`: unset for the default Next.js server, `standalone` (set by the Dockerfile), `export` for a static site in `out/` (`NEXT_OUTPUT=export pnpm build`).
+- `pnpm wrangler dev`: serves the static export from `out/` locally like Cloudflare does (http://localhost:8787).
+
+## Hosting
+
+Production is the static export on Cloudflare Workers Static Assets (`wrangler.jsonc`, no Worker script, so no request invokes a Worker). Cloudflare Workers Builds builds and deploys from Git (build command `NEXT_OUTPUT=export pnpm build`, deploy `npx wrangler deploy`, non-production branches `npx wrangler versions upload`); dashboard settings in `README.md`. No deploy job in GitHub Actions. Keep the app free of server-only features (API routes, per-request data), since the export cannot run them. The Docker image (`standalone`) stays a supported alternative.
 
 ## Content Security Policy
 
 The app loads resources only from its own origin (inline SVG illustrations, font self-hosted by `next/font`). Keep it that way: no CDNs, hotlinked images or external scripts. The policy lives in `lib/csp.mjs`.
 
-- Server (unset or `standalone`): `proxy.ts` sets a strict CSP with a fresh nonce per request, so pages render per request instead of being prerendered. `next.config.ts` adds the other security headers, including HSTS.
-- Static export (`export`): `proxy.ts` does not run, so `scripts/postbuild.mjs` adds a CSP `<meta>` tag with SHA-256 hashes of the inline scripts to every exported page. `frame-ancestors` and the other headers must then be set by the web server (list in `README.md`).
+- Server (unset or `standalone`): `proxy.ts` sets a strict CSP with a fresh nonce per request, so pages render per request instead of being prerendered. `next.config.ts` adds the other security headers (`lib/security-headers.mjs`), including HSTS.
+- Static export (`export`): `proxy.ts` does not run, so `scripts/postbuild.mjs` adds a CSP `<meta>` tag with SHA-256 hashes of the inline scripts to every exported page and writes `frame-ancestors` plus the headers from `lib/security-headers.mjs` into `out/_headers` for Cloudflare. Change headers in `lib/security-headers.mjs`, never in a hand-written `_headers`.
 
 ## graphify (code graph)
 

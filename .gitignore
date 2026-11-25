@@ -18,8 +18,8 @@ coverage
 # Turbo
 .turbo
 
-# Vercel
-.vercel
+# Wrangler (local state of `wrangler dev`)
+.wrangler
 
 # Build Outputs
 .next/
