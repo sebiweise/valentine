@@ -11,7 +11,7 @@ A small Next.js app that asks "Will you be my Valentine?"; every click on "No" m
 ## Commands
 
 - `pnpm dev`: dev server on http://localhost:3000.
-- `pnpm check`: eslint + `next typegen` + `tsc --noEmit`. CI runs `pnpm check`, `pnpm build` and `docker build .`.
+- `pnpm check`: eslint + `next typegen` + `tsc --noEmit`. CI: `pages.yml` builds the static export on `master`, `security.yml` runs the security scan. No CI job runs `pnpm check` or `docker build .`, so run them locally.
 - `pnpm build`: production build, followed by `scripts/postbuild.mjs`. Always build with `pnpm build`, never `next build` directly.
 - Output mode via `NEXT_OUTPUT`: unset for the default Next.js server, `standalone` (set by the Dockerfile), `export` for a static site in `out/` (`NEXT_OUTPUT=export pnpm build`).
 - `BASE_PATH`: path prefix (Next.js `basePath`/`assetPrefix`), e.g. `NEXT_OUTPUT=export BASE_PATH=/valentine pnpm build` like the Pages workflow (in Git Bash prefix `MSYS_NO_PATHCONV=1`). Absolute paths to files in `public/` are not prefixed by Next.js: write them as `${env.BASE_PATH}/file` (see the favicon in `app/layout.tsx`).
