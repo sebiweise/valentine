@@ -28,8 +28,7 @@
     "eslint-config-next": "^16.4.6",
     "postcss": "^8.5.33",
     "tailwindcss": "^4.3.5",
-    "typescript": "^6.0.3",
-    "wrangler": "^4.167.0"
+    "typescript": "^6.0.3"
   },
   "engines": {
     "node": ">=26"

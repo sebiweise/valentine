@@ -1,9 +1,6 @@
 allowBuilds:
   # Only runs a postinstall check; prebuilt binaries are installed as optional deps
   unrs-resolver: false
-  # Same for wrangler's esbuild and workerd binaries
-  esbuild: false
-  workerd: false
 
 # Keep the pnpm pin from "packageManager" out of pnpm-lock.yaml: with it, pnpm 12
 # writes the lockfile as two YAML documents, which SonarCloud's dependency

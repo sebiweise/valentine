@@ -18,9 +18,6 @@ coverage
 # Turbo
 .turbo
 
-# Wrangler (local state of `wrangler dev`)
-.wrangler
-
 # Build Outputs
 .next/
 out/
