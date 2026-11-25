@@ -42,15 +42,16 @@ reviews:
         Tastatur bedienbar, Illustrationen mit sinnvollem Alternativtext oder
         aria-hidden. UI-Texte auf Englisch. Lint übernimmt ESLint,
         Sicherheitsfunde meldet der Security-Scan: diese nicht wiederholen.
-    - path: "{proxy.ts,lib/csp.mjs,scripts/postbuild.mjs,next.config.ts}"
+    - path: "{proxy.ts,lib/csp.mjs,lib/security-headers.mjs,scripts/postbuild.mjs,next.config.ts,wrangler.jsonc}"
       instructions: >-
         Server: proxy.ts setzt eine CSP mit Nonce pro Anfrage, deshalb wird
-        pro Anfrage gerendert. Statischer Export (NEXT_OUTPUT=export):
-        postbuild.mjs fügt eine CSP als meta-Tag mit Hashes der
-        Inline-Skripte ein. 'unsafe-inline' nur für style-src,
-        'unsafe-eval' nur in der Entwicklung. Jede weitere Lockerung braucht
-        eine sehr gute Begründung. Alle drei Ausgabemodi (Vercel,
-        standalone, export) müssen weiter funktionieren.
+        pro Anfrage gerendert. Statischer Export (NEXT_OUTPUT=export, in
+        Produktion auf Cloudflare Workers Static Assets): postbuild.mjs fügt
+        eine CSP als meta-Tag mit Hashes der Inline-Skripte ein und schreibt
+        die übrigen Header nach out/_headers. 'unsafe-inline' nur für
+        style-src, 'unsafe-eval' nur in der Entwicklung. Jede weitere
+        Lockerung braucht eine sehr gute Begründung. Alle drei Ausgabemodi
+        (NEXT_OUTPUT leer, standalone, export) müssen weiter funktionieren.
     - path: "env.ts"
       instructions: >-
         Umgebungsvariablen über @t3-oss/env-nextjs. Neue Variablen in

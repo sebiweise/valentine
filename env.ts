@@ -11,9 +11,9 @@ export const env = createEnv({
       .default("development"),
     /**
      * Next.js output mode:
-     * - unset: default (e.g. for Vercel)
+     * - unset: default Next.js server (`next start`)
      * - "standalone": self-contained Node.js server (used by the Dockerfile)
-     * - "export": fully static HTML export into `out/`
+     * - "export": fully static HTML export into `out/` (deployed to Cloudflare Workers Static Assets)
      */
     NEXT_OUTPUT: z.enum(["standalone", "export"]).optional(),
   },

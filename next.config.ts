@@ -1,38 +1,15 @@
 import type { NextConfig } from 'next'
 
 import { env } from './env'
-
-const securityHeaders = [
-    {
-        key: 'X-Content-Type-Options',
-        value: 'nosniff',
-    },
-    {
-        key: 'X-Frame-Options',
-        value: 'DENY',
-    },
-    {
-        key: 'Referrer-Policy',
-        value: 'strict-origin-when-cross-origin',
-    },
-    {
-        key: 'Permissions-Policy',
-        value: 'camera=(), microphone=(), geolocation=()',
-    },
-    {
-        // Browsers ignore this header on plain HTTP, so local development is not affected.
-        // Without includeSubDomains/preload, so other subdomains of the domain are not affected.
-        key: 'Strict-Transport-Security',
-        value: 'max-age=63072000',
-    },
-    // The Content-Security-Policy is set per request with a nonce in proxy.ts
-];
+import { securityHeaders } from './lib/security-headers.mjs'
 
 const nextConfig: NextConfig = {
     // Set via NEXT_OUTPUT, e.g. "standalone" for the Docker image (see env.ts)
     output: env.NEXT_OUTPUT,
     poweredByHeader: false,
-    // Custom headers are not supported by static exports; they have to be set by the hosting server
+    // Custom headers are not supported by static exports; scripts/postbuild.mjs
+    // writes them into out/_headers instead. The Content-Security-Policy is set
+    // per request with a nonce in proxy.ts.
     ...(env.NEXT_OUTPUT !== 'export' && {
         headers: () =>
             Promise.resolve([
