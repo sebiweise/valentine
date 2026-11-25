@@ -12,9 +12,13 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "♥♥♥",
   description: "Will you be my Valentine?",
+  // Static files from public/ are not prefixed with the basePath automatically
   icons: {
-    icon: "/favicon.png",
+    icon: `${env.BASE_PATH}/favicon.png`,
   },
+  // Also as <meta>, because static hosts like GitHub Pages cannot send the
+  // Referrer-Policy header (lib/security-headers.mjs)
+  referrer: "strict-origin-when-cross-origin",
 };
 
 interface Props {

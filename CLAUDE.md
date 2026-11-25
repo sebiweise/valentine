@@ -11,21 +11,21 @@ A small Next.js app that asks "Will you be my Valentine?"; every click on "No" m
 ## Commands
 
 - `pnpm dev`: dev server on http://localhost:3000.
-- `pnpm check`: eslint + `next typegen` + `tsc --noEmit`. CI runs `pnpm check`, `pnpm build` and `docker build .`.
+- `pnpm check`: eslint + `next typegen` + `tsc --noEmit`. CI: `pages.yml` builds the static export on `master`, `security.yml` runs the security scan. No CI job runs `pnpm check` or `docker build .`, so run them locally.
 - `pnpm build`: production build, followed by `scripts/postbuild.mjs`. Always build with `pnpm build`, never `next build` directly.
 - Output mode via `NEXT_OUTPUT`: unset for the default Next.js server, `standalone` (set by the Dockerfile), `export` for a static site in `out/` (`NEXT_OUTPUT=export pnpm build`).
-- `pnpm wrangler dev`: serves the static export from `out/` locally like Cloudflare does (http://localhost:8787).
+- `BASE_PATH`: path prefix (Next.js `basePath`/`assetPrefix`), e.g. `NEXT_OUTPUT=export BASE_PATH=/valentine pnpm build` like the Pages workflow (in Git Bash prefix `MSYS_NO_PATHCONV=1`). Absolute paths to files in `public/` are not prefixed by Next.js: write them as `${env.BASE_PATH}/file` (see the favicon in `app/layout.tsx`).
 
 ## Hosting
 
-Production is the static export on Cloudflare Workers Static Assets (`wrangler.jsonc`, no Worker script, so no request invokes a Worker). Cloudflare Workers Builds builds and deploys from Git (build command `NEXT_OUTPUT=export pnpm build`, deploy `npx wrangler deploy`, non-production branches `npx wrangler versions upload`); dashboard settings in `README.md`. No deploy job in GitHub Actions. Keep the app free of server-only features (API routes, per-request data), since the export cannot run them. The Docker image (`standalone`) stays a supported alternative.
+Production is the static export on GitHub Pages as a project site (https://sebiweise.github.io/valentine/). `.github/workflows/pages.yml` builds with `NEXT_OUTPUT=export` and `BASE_PATH=/<repository name>` on every push to `master` (or manually) and deploys `out/` with `actions/upload-pages-artifact` + `actions/deploy-pages`; Settings → Pages → Source must be "GitHub Actions". Keep the app free of server-only features (API routes, per-request data), since the export cannot run them, and keep every absolute URL working under the base path. The Docker image (`standalone`) stays a supported alternative.
 
 ## Content Security Policy
 
 The app loads resources only from its own origin (inline SVG illustrations, font self-hosted by `next/font`). Keep it that way: no CDNs, hotlinked images or external scripts. The policy lives in `lib/csp.mjs`.
 
 - Server (unset or `standalone`): `proxy.ts` sets a strict CSP with a fresh nonce per request, so pages render per request instead of being prerendered. `next.config.ts` adds the other security headers (`lib/security-headers.mjs`), including HSTS.
-- Static export (`export`): `proxy.ts` does not run, so `scripts/postbuild.mjs` adds a CSP `<meta>` tag with SHA-256 hashes of the inline scripts to every exported page and writes `frame-ancestors` plus the headers from `lib/security-headers.mjs` into `out/_headers` for Cloudflare. Change headers in `lib/security-headers.mjs`, never in a hand-written `_headers`.
+- Static export (`export`): `proxy.ts` does not run, so `scripts/postbuild.mjs` adds a CSP `<meta>` tag with SHA-256 hashes of the inline scripts to every exported page; `app/layout.tsx` sets the referrer policy as `<meta>` too. GitHub Pages cannot send response headers, so `frame-ancestors`/`X-Frame-Options`, `nosniff` and `Permissions-Policy` are missing there (documented in `README.md`); HSTS comes from `github.io`. Do not add a `_headers` file, Pages ignores it.
 
 ## graphify (code graph)
 

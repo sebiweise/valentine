@@ -42,13 +42,16 @@ reviews:
         Tastatur bedienbar, Illustrationen mit sinnvollem Alternativtext oder
         aria-hidden. UI-Texte auf Englisch. Lint übernimmt ESLint,
         Sicherheitsfunde meldet der Security-Scan: diese nicht wiederholen.
-    - path: "{proxy.ts,lib/csp.mjs,lib/security-headers.mjs,scripts/postbuild.mjs,next.config.ts,wrangler.jsonc}"
+    - path: "{proxy.ts,lib/csp.mjs,lib/security-headers.mjs,scripts/postbuild.mjs,next.config.ts,env.ts}"
       instructions: >-
         Server: proxy.ts setzt eine CSP mit Nonce pro Anfrage, deshalb wird
         pro Anfrage gerendert. Statischer Export (NEXT_OUTPUT=export, in
-        Produktion auf Cloudflare Workers Static Assets): postbuild.mjs fügt
-        eine CSP als meta-Tag mit Hashes der Inline-Skripte ein und schreibt
-        die übrigen Header nach out/_headers. 'unsafe-inline' nur für
+        Produktion auf GitHub Pages unter BASE_PATH=/valentine): postbuild.mjs
+        fügt eine CSP als meta-Tag mit Hashes der Inline-Skripte ein, die
+        Referrer-Policy steht als meta-Tag in app/layout.tsx. Pages kann
+        keine Header senden (kein frame-ancestors/X-Frame-Options, nosniff,
+        Permissions-Policy); kein _headers anlegen. Absolute Pfade müssen
+        unter dem basePath funktionieren. 'unsafe-inline' nur für
         style-src, 'unsafe-eval' nur in der Entwicklung. Jede weitere
         Lockerung braucht eine sehr gute Begründung. Alle drei Ausgabemodi
         (NEXT_OUTPUT leer, standalone, export) müssen weiter funktionieren.
@@ -64,8 +67,10 @@ reviews:
     - path: ".github/workflows/**"
       instructions: >-
         Actions per Versions-Tag einbinden (`owner/action@vX`, Major-Tag,
-        wo die Action einen hat), minimale permissions setzen. CI
-        prüft pnpm check, den Build und docker build.
+        wo die Action einen hat), minimale permissions pro Job setzen.
+        pages.yml baut den statischen Export mit BASE_PATH und deployt ihn
+        auf GitHub Pages (nur Push auf master und manuell, GitHub-gehosteter
+        Runner, da das Repo öffentlich ist).
     - path: ".claude/hooks/**"
       instructions: >-
         Bash-Hooks für graphify. Sie dürfen nie blockieren. Lokal installieren
